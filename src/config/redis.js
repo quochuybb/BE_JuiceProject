@@ -13,7 +13,6 @@ client.on('connect', () => {
     console.log('✅ Connected to Redis Matchmaking Queue successfully.');
 });
 
-// Hàm khởi tạo để dùng trong server.js sau này
 const connectRedis = async () => {
     try {
         await client.connect();

@@ -36,7 +36,7 @@ const User = sequelize.define('User', {
   tableName: 'users',
   timestamps: true,
   createdAt: 'created_at',
-  updatedAt: false // We only have created_at in our current DB schema
+  updatedAt: false
 });
 
 module.exports = User;
