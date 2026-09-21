@@ -22,8 +22,29 @@ const saveProgress = async (userId, sessionData) => {
     await user.save();
     return true;
 };
+const getEquippedRecipes = async (username) => {
+    const user = await User.findOne({
+        where: { username: username },
+        attributes: ['session_data']
+    });
+    if (!user) {
+        throw new Error('User not found');
+    }
+    if (!user.session_data) {
+        return [];
+    }
+    try {
+        const sessionData = JSON.parse(user.session_data);
+        const recipeIDs = sessionData.recipeListIDs || [];
+        return recipeIDs;
+    } catch (error) {
+        console.error(`[PlayerService] Failed to parse session_data for ${username}:`, error);
+        return [];
+    }
+};
 
 module.exports = {
     getPlayerData,
-    saveProgress
+    saveProgress,
+    getEquippedRecipes
 };

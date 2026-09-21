@@ -3,8 +3,8 @@ const playerService = require('../services/player.service');
 const getMyData = async (req, res) => {
     try {
         // req.user được tạo ra từ auth.middleware.js
-        const userId = req.user.userId; 
-        
+        const userId = req.user.userId;
+
         const playerData = await playerService.getPlayerData(userId);
         return res.status(200).json(playerData);
 
@@ -23,6 +23,7 @@ const saveProgress = async (req, res) => {
         const { session_data } = req.body;
 
         await playerService.saveProgress(userId, session_data);
+        console.log("Save process of " + userId + " successfully");
         return res.status(200).json({ message: "Progress saved successfully" });
 
     } catch (error) {
@@ -31,7 +32,26 @@ const saveProgress = async (req, res) => {
     }
 }
 
+const getEquippedRecipes = async (req, res) => {
+    try {
+        const { username } = req.params;
+        const recipeIDs = await playerService.getEquippedRecipes(username);
+        return res.status(200).json({
+            username: username,
+            equippedRecipeIDs: recipeIDs
+        });
+    } catch (error) {
+        console.error("Get equipped recipes error:", error);
+        if (error.message === 'User not found') {
+            return res.status(404).json({ message: error.message });
+        }
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
 module.exports = {
     getMyData,
-    saveProgress
+    saveProgress,
+    getEquippedRecipes
 };
